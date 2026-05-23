@@ -73,4 +73,7 @@ http://127.0.0.1:5000
 - `Submission_Notes.md` - short explanation of the assignment.
 
 ## Conclusion
-The project shows how text descriptions can be transformed into features and clustered into meaningful groups. This supports the lecture concept that clustering partitions data objects into meaningful sub-classes based on similarity.
+
+This project demonstrates how clustering can be applied in web mining to group movies based on the similarity of text descriptions. The system transforms unstructured movie descriptions into numerical TF-IDF features, reduces them into topic-style components using NMF, and applies K-Means clustering to create meaningful movie groups.
+
+The final web page presents the clustered movies in a clear and user-friendly way, using descriptive cluster names, top keywords, and movie examples. This supports the Lecture 3 concept that clustering partitions data objects into meaningful sub-classes based on similarity.
