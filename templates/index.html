@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CineCluster | Movie Similarity Explorer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+    <nav class="topbar">
+        <a class="brand" href="/">
+            <span class="brand-mark">C</span>
+            <span>CineCluster</span>
+        </a>
+        <span class="topbar-meta">Similarity Explorer</span>
+    </nav>
+
+    <header class="hero">
+        <div class="hero-content">
+            <div class="hero-copy">
+                <p class="eyebrow">TMDB Movie Text Clustering</p>
+                <h1>Discover movies by story similarity.</h1>
+                <p>
+                    Browse TMDB movies organized into theme-based clusters using overviews,
+                    genres, keywords, cast, and crew metadata.
+                </p>
+                <div class="stats">
+                    <div><strong>{{ total_movies }}</strong><span>Movies</span></div>
+                    <div><strong>{{ n_clusters }}</strong><span>Clusters</span></div>
+                    <div><strong>{{ silhouette }}</strong><span>Score</span></div>
+                </div>
+            </div>
+            <div class="hero-posters" aria-hidden="true">
+                <img src="{{ url_for('static', filename='posters/tmdb/inception-27205.svg') }}" alt="" />
+                <img src="{{ url_for('static', filename='posters/tmdb/avatar-19995.svg') }}" alt="" />
+                <img src="{{ url_for('static', filename='posters/tmdb/the-dark-knight-155.svg') }}" alt="" />
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="control-panel">
+            <div>
+                <h2>Cluster Browser</h2>
+                <p>
+                    Each group is formed from similar TMDB overviews, genres, keywords, cast, and
+                    director metadata. The page shows top examples from each cluster to keep browsing fast.
+                </p>
+            </div>
+            <div class="toolbar">
+                <form method="get" class="filter-form">
+                    <label for="cluster">Show</label>
+                    <select name="cluster" id="cluster" onchange="this.form.submit()">
+                        <option value="all" {% if selected_cluster == 'all' %}selected{% endif %}>All themes</option>
+                        {% for cid in range(n_clusters) %}
+                        <option value="{{ cid }}" {% if selected_cluster == cid|string %}selected{% endif %}>{{ cluster_names[cid] }}</option>
+                        {% endfor %}
+                    </select>
+                </form>
+            </div>
+        </section>
+
+        <nav class="cluster-tabs" aria-label="Cluster filters">
+            <a href="/" class="{% if selected_cluster == 'all' %}active{% endif %}">All</a>
+            {% for cid in range(n_clusters) %}
+            <a href="/?cluster={{ cid }}" class="{% if selected_cluster == cid|string %}active{% endif %}">{{ cluster_names[cid] }}</a>
+            {% endfor %}
+        </nav>
+
+        {% for cluster_id, movies in grouped.items() %}
+        <section class="cluster-section" id="cluster-{{ cluster_id }}">
+            <div class="cluster-header">
+                <div>
+                    <p class="cluster-id">Cluster {{ cluster_id }}</p>
+                    <h2>{{ cluster_names[cluster_id] }}</h2>
+                    <p><span>Keywords</span>{{ keywords[cluster_id] }}</p>
+                </div>
+                <span class="count-badge">Showing {{ movies|length }} of {{ cluster_counts[cluster_id] }}</span>
+            </div>
+            <div class="movie-grid">
+                {% for movie in movies %}
+                <article class="movie-card">
+                    <div class="poster-frame">
+                        <img
+                            class="movie-poster"
+                            src="{{ url_for('static', filename=movie.poster_path) }}"
+                            alt="{{ movie.title }} movie poster"
+                            loading="lazy"
+                        />
+                        <span class="poster-fallback">{{ movie.title }}</span>
+                        <span class="poster-year">{{ movie.year }}</span>
+                    </div>
+                    <div class="movie-content">
+                        <div class="movie-meta">{{ movie.genre }}</div>
+                        <h3>{{ movie.title }}</h3>
+                        <p>{{ movie.description }}</p>
+                        <a class="movie-link" href="{{ movie.link }}" target="_blank" rel="noopener">View on TMDB</a>
+                    </div>
+                </article>
+                {% endfor %}
+            </div>
+        </section>
+        {% endfor %}
+    </main>
+
+    <footer>
+        <p>Created for Lecture 3 clustering assignment: TMDB movies clustered according to similarity of text description and metadata.</p>
+    </footer>
+</body>
+</html>

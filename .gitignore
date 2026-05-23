@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Virtual environments
+env/
+venv/
+.venv/
+
+# Local editor / OS files
+.~lock.*#
+.DS_Store
+Thumbs.db
+
+# Codex/agent local context
+.agents/
+.codex/
+
+# Generated static artifacts
+index_static.html
+static/posters/tmdb/
