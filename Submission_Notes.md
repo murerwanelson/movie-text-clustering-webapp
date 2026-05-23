@@ -18,13 +18,14 @@ The project uses the TMDB 5000 movie dataset:
 After cleaning, 4,797 movies with usable overviews are clustered. The covers in `static/posters/tmdb/` are generated local cover-style images for the web page, not official movie posters.
 
 ## Methodology
-1. TMDB movie and credit datasets are merged using the movie ID.
-2. Text is built from movie overview, tagline, genres, keywords, top cast, and director.
-3. Text features are converted into numerical vectors using TF-IDF.
-4. Non-negative Matrix Factorization (NMF) is applied to learn cleaner topic-style features from the sparse TF-IDF matrix.
-5. K-Means clustering groups similar movies into 8 theme-based clusters using the NMF feature representation.
-6. The web page displays each cluster with a meaningful theme name, top keywords, generated cover images, and top movie examples.
-7. The clustering quality is evaluated using cosine silhouette score, which is suitable for normalized text vectors.
+
+The TMDB 5000 movies dataset and credits dataset were first merged using the movie ID. The main clustering text was created by combining each movie’s overview, tagline, genres, keywords, top cast members, and director. Missing text values were cleaned before feature extraction.
+
+The combined text was converted into numerical form using TF-IDF vectorisation with unigrams and bigrams. Since TF-IDF produces a high-dimensional sparse matrix, Non-negative Matrix Factorisation (NMF) was applied to reduce the text representation into cleaner topic-style features.
+
+K-Means clustering was then used to group movies into 8 clusters based on similarity of their text descriptions. Each cluster was given a descriptive theme name by inspecting the top keywords and movie examples within that cluster.
+
+The clustering quality was evaluated using the cosine silhouette score. Cosine similarity was selected because it is suitable for text-based vector representations. The final cosine silhouette score was 0.612, suggesting that the movie descriptions were separated into reasonably meaningful groups.
 
 ## Cluster names
 The clustered groups are shown with descriptive names instead of only numeric labels:
